@@ -32,6 +32,7 @@ import randomstring from 'crypto-random-string';
         }
     },
     mounted() {
+      console.log( this.$route.params.id)
         axios.get('http://localhost:8080/api/v1/auth/me', {
              headers: 
              { Authorization: `Bearer ${localStorage.getItem('token')}`}
@@ -44,12 +45,12 @@ import randomstring from 'crypto-random-string';
     },
     methods: {
         onGenerate(){
-            const password = randomstring({ length: 8, type: 'alphanumeric' });
+            const password = randomstring({ length: 4, type: 'alphanumeric' });
             this.newPassword = password;
             
         },
         submitPassword() {
-            axios.put(`http://localhost:8080/api/v1/auth/changePassword/${this.user.id}`, this.newPassword, {
+            axios.put(`http://localhost:8080/api/v1/auth/changePassword/${this.$route.params.id}`, this.newPassword, {
             headers: {
               'Content-Type': 'text/plain'
             }

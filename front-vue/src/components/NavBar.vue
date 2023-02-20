@@ -1,12 +1,13 @@
 <template>
-    <div>
+    <div class="text-center">
       
-      <nav class="text-center">
-        <router-link to="/">Login</router-link> |
-        <router-link to="/register">Register</router-link>
-      </nav>
+      <img src="@/assets/paiper-logo.png/" alt="" height="100px">
       <hr>
     </div>
   </template>
+
+  <style scoped>
+   
+</style>
   
   

@@ -5,6 +5,8 @@ import RegisterPage from '@/components/RegisterPage'
 import HomePage from '@/components/HomePage'
 import AddPage from '@/components/AddPage'
 import PasswordGenerator from '@/components/PasswordGenerator'
+import CreateUser from '@/components/CreateUser'
+import ListPersonnel from '@/components/ListPersonnel'
 
 Vue.use(VueRouter)
 
@@ -14,6 +16,11 @@ const routes = [
         component: LoginPage,
         name: 'LoginPage'
     },
+    {
+      path: '/listPersonnel',
+      component: ListPersonnel,
+      name: 'ListPersonnel',
+  },
     {
         path: '/register',
         component: RegisterPage,
@@ -33,6 +40,11 @@ const routes = [
       path: '/generatePassword',
       component: PasswordGenerator,
       name: 'generatePassword',
+    }, 
+    {
+      path: '/createUser',
+      component: CreateUser,
+      name: 'createUser',
     },  
 ]
 

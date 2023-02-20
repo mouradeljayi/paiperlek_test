@@ -1,5 +1,6 @@
 package com.alibou.security.user;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -27,17 +28,20 @@ public class User implements UserDetails {
   @Id
   @GeneratedValue
   private Integer id;
+  @Column(unique = true)
   private String firstname;
+  @Column(unique = true)
   private String lastname;
+  @Column(unique = true)
   private String email;
   private String password;
 
-  @Enumerated(EnumType.STRING)
-  private Role role;
+ 
+  private String role;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of(new SimpleGrantedAuthority(role.name()));
+    return List.of(new SimpleGrantedAuthority(role));
   }
 
   @Override

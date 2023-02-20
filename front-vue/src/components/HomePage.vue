@@ -1,38 +1,61 @@
 <template>
     <div class="container mt-5">
         <div class="mb-5">
-            <div v-if="user">
-                <p ><strong>Bonjour {{ user.firstname }} | {{ user.role }}</strong></p>
+            <div v-if="this.$route.params.message" class="alert alert-success mb-2">
+                {{ this.$route.params.message }}
             </div>
-            <div class="d-flex justify-content-between">
-                <button @click="generatePass()" v-if="user.role === 'ADMIN'" class="btn btn-secondary btn-sm ">Générer un nouveau mot de passe</button>
-                <button @click="newPersonnel" class="btn btn-info btn-sm mr-2">ajouter personnel</button>
-                <button @click="logout" class="btn btn-warning btn-sm ">se déconnecter</button>
+            
+            <div class="d-flex justify-content-between align-items-center">
+                
+                <div v-if="user">
+                <p >  <img src="@/assets/user.png/" alt="" height="30px"> <strong>Bonjour {{ user.firstname }} | <span class="badge bg-success">{{ user.role }}</span></strong></p>
+                </div>
+                <div class="float-end">
+                    <img src="@/assets/paiperleck.png/" alt="" height="50px" >
+                 </div>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" v-model="search" type="search" placeholder="Recherchez" aria-label="Search">
+                    
+                </form>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between mt-3">
+                
+                <button @click="newUser()" v-if="user.role === 'ADMIN'" class="btn btn-secondary btn-sm">Créer un nouveau utilisateur</button>
+                <button @click="allPersonnel()" class="btn btn-secondary btn-sm">Consulter la liste de personnel</button>
+                
+                <button @click="logout" class="btn btn-secondary btn-sm ">se déconnecter</button>
             </div>
            
         </div>
       <div class="d-flex justify-content-center">
         
-        <table v-if="personnel.length > 0" class="table table-bordered">
+        <table v-if="users.length > 0" class="table table-bordered">
             <thead>
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Nom</th>
                     <th scope="col">Prénom</th>
-                    <th scope="col">Salaire</th>
-                    <th scope="col">Service</th>
-                    <th scope="col">Options</th>
+                    <th scope="col">email</th>
+                    <th scope="col">role</th>
+                    <th scope="col" v-if="user.role === 'ADMIN'">Options</th>
                 </tr>
             </thead>
             
             <tbody>
-                <tr v-for="p in personnel" :key="p.id">
+                <tr v-for="p in searchUsers()" :key="p.id">
                     <th>{{ p.id }}</th>
-                    <td>{{ p.nom }}</td>
-                    <td>{{ p.prenom }}</td>
-                    <td>{{ p.salaire }}</td>
-                    <td>{{ p.service }}</td>
-                    <td><button @click="deletePersonnel(p.id)" class="btn btn-danger btn-sm">supprimer</button></td>
+                    <td>{{ p.firstname }}</td>
+                    <td>{{ p.lastname }}</td>
+                    <td>{{ p.email }}</td>
+                    <td>{{ p.role }}</td>
+                    <td v-if="user.role === 'ADMIN'">
+                        <div class="d-flex justify-content-around">
+                            <button @click="generatePass(p.id)" v-if="user.role === 'ADMIN'" class="btn btn-warning btn-sm ">Modifier</button>
+                            <button @click="deleteUser(p.id)" v-if="user.role === 'ADMIN'" class="btn btn-danger btn-sm">supprimer</button>
+                            <button @click="generatePass(p.id)" v-if="user.role === 'ADMIN'" class="btn btn-dark btn-sm ">Générer un nouveau mot de passe</button>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
             </table>
@@ -50,8 +73,9 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            personnel: [],
-            user: {}
+            users: [],
+            user: {},
+            search : '',
 
         }
     },
@@ -62,20 +86,20 @@ export default {
         if(!localStorage.getItem('token')) {
                 this.$router.push({ name: "LoginPage" })
         }
-        axios.get('http://localhost:8080/api/v1/personnel', {
+        axios.get('http://localhost:8080/api/v1/auth/all', {
              headers: 
              { Authorization: `Bearer ${localStorage.getItem('token')}`}
             })
         .then(res => {
-            this.personnel = res.data
+            this.users = res.data
         })
         .catch(err => {
             console.log(err)
         })
     },
    methods: {
-      deletePersonnel(id) {
-         axios.delete(`http://localhost:8080/api/v1/personnel/${id}`, {
+      deleteUser(id) {
+         axios.delete(`http://localhost:8080/api/v1/auth/${id}`, {
              headers: { Authorization: `Bearer ${localStorage.getItem('token')}` 
              
         }}).then(
@@ -91,8 +115,8 @@ export default {
             localStorage.clear();
             this.$router.push("/");
     },
-    generatePass() {
-        this.$router.push('/generatePassword')
+    generatePass(id) {
+        this.$router.push({ name: "generatePassword", params: { id: id } })
     },
     getUser() {
         axios.get('http://localhost:8080/api/v1/auth/me', {
@@ -105,8 +129,19 @@ export default {
           console.log(error);
         });
     },
-    newPersonnel() {
+    allPersonnel() {
+        this.$router.push("/listPersonnel")
+    },
+    getUsers() {
         this.$router.push("/add")
+    },
+    newUser() {
+        this.$router.push("/createUser") 
+    },
+    searchUsers() {
+        return this.users.filter(a => {
+        return a.firstname.toLowerCase().includes(this.search.toLowerCase())
+      })
     }
    }
 }

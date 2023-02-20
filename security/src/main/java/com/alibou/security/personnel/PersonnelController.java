@@ -18,7 +18,7 @@ public class PersonnelController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    
     public ResponseEntity<List<Personnel>> getAllPersonnel() {
         return ResponseEntity.ok(personnelService.findAllPersonnel());
     }
