@@ -18,7 +18,6 @@ public class PersonnelController {
     }
 
     @GetMapping
-    
     public ResponseEntity<List<Personnel>> getAllPersonnel() {
         return ResponseEntity.ok(personnelService.findAllPersonnel());
     }
@@ -29,9 +28,21 @@ public class PersonnelController {
         return ResponseEntity.ok(personnelService.savePersonnel(personnel));
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public ResponseEntity<Personnel> updatePersonnel(@PathVariable Integer id, @RequestBody Personnel personnel) {
+        return ResponseEntity.ok(personnelService.updatPersonnel(personnel, id));
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public ResponseEntity<Personnel> findPersonnel(@PathVariable Integer id) {
+        return ResponseEntity.ok(personnelService.findPersonnel(id));
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-    public ResponseEntity<?> deletePersonnel(@PathVariable Long id) {
+    public ResponseEntity<?> deletePersonnel(@PathVariable Integer id) {
         personnelService.deletePersonnel(id);
         return ResponseEntity.noContent().build();
     }

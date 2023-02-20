@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Service
 @Slf4j
 public class PersonnelServiceImpl implements PersonnelService {
@@ -23,11 +24,24 @@ public class PersonnelServiceImpl implements PersonnelService {
         return this.personnelRepository.findAll();
     }
 
-    public void deletePersonnel(Long id) {
+    public void deletePersonnel(Integer id) {
         if(id == null) {
             log.error("ID de personnel est nul");
             return;
         }
         this.personnelRepository.deleteById(id);
+    }
+
+    @Override
+    public Personnel updatPersonnel(Personnel personnel, Integer id) {
+        //Personnel p = personnelRepository.findById(id).get();
+        personnel.setId(id);
+        return personnelRepository.save(personnel);
+     
+    }
+
+    @Override
+    public Personnel findPersonnel(Integer id) {
+        return personnelRepository.findById(id).get();
     }
 }

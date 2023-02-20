@@ -7,6 +7,7 @@ import AddPage from '@/components/AddPage'
 import PasswordGenerator from '@/components/PasswordGenerator'
 import CreateUser from '@/components/CreateUser'
 import ListPersonnel from '@/components/ListPersonnel'
+import UpdatePage from '@/components/UpdatePage'
 
 Vue.use(VueRouter)
 
@@ -35,6 +36,11 @@ const routes = [
       path: '/add',
       component: AddPage,
       name: 'AddPage',
+    },
+    {
+      path: '/update',
+      component: UpdatePage,
+      name: 'UpdatePage',
     },  
     {
       path: '/generatePassword',

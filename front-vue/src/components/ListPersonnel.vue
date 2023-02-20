@@ -1,6 +1,9 @@
 <template>
     <div class="container mt-5">
         <h1>Liste de personnel</h1>
+        <div v-if="this.$route.params.message" class="alert alert-success mb-2">
+                {{ this.$route.params.message }}
+            </div>
       <div class="d-flex justify-content-center">
         
         <table v-if="personnel.length > 0" class="table table-bordered">
@@ -24,7 +27,7 @@
                     <td>{{ p.service }}</td>
                     <td >
                         <div class="d-flex justify-content-around">
-                            <button @click="updtaePersonnel(p.id)" class="btn btn-warning btn-sm ">Modifier</button>
+                            <button @click="editPersonnel(p.id)" class="btn btn-warning btn-sm ">Modifier</button>
                             <button @click="deletePersonnel(p.id)" class="btn btn-danger btn-sm">supprimer</button>
                         </div>
                     </td>
@@ -68,6 +71,9 @@ export default {
         })
     },
    methods: {
+    editPersonnel(id) {
+        this.$router.push({ name: "UpdatePage", params: { id:id} })
+    },
     deletePersonnel(id) {
          axios.delete(`http://localhost:8080/api/v1/personnel/${id}`, {
              headers: { Authorization: `Bearer ${localStorage.getItem('token')}` 
